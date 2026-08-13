@@ -4,11 +4,12 @@
   "type": "object",
   "required": ["schema_version", "name", "created", "plugin_version"],
   "properties": {
-    "schema_version": {"const": 2},
+    "schema_version": {"enum": [2, 3]},
     "name": {"type": "string", "minLength": 1},
     "created": {"type": "string", "format": "date"},
     "plugin_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
     "package_path": {"type": "string"},
+    "default_baseline": {"$ref": "#/definitions/defaultBaseline"},
     "pbg_processes": {
       "type": "array", "items": {"type": "string"},
       "description": "Legacy from v0.1.x — kept as optional for migrated workspaces; new workspaces omit it."
@@ -70,9 +71,43 @@
           "description": "Which renderer the dashboard uses for composite wiring. Default 'loom-explore' (interactive React Flow). Set to 'bigraph-viz' to fall back to the legacy static SVG render."
         }
       }
+    },
+    "layout": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Optional per-directory layout overrides (workspace-root-relative paths). Any key omitted defaults to the conventional flat name (e.g. 'studies' -> 'studies'), so omitting this block keeps the classic top-level layout and existing workspaces are unaffected. Set values to relocate, e.g. 'workspace/studies', to group research dirs under a tidier subtree. Tooling resolves these via the WorkspacePaths resolver.",
+      "properties": {
+        "studies": {"type": "string"},
+        "investigations": {"type": "string"},
+        "composites": {"type": "string"},
+        "references": {"type": "string"},
+        "datasets": {"type": "string"},
+        "notes": {"type": "string"},
+        "experiments": {"type": "string"},
+        "reports": {"type": "string"},
+        "pbg": {"type": "string"},
+        "scripts": {"type": "string"},
+        "tests": {"type": "string"},
+        "docs": {"type": "string"},
+        "package": {"type": "string"}
+      }
     }
   },
   "definitions": {
+    "defaultBaseline": {
+      "type": "object",
+      "description": "v3 (Phase 2): pre-fill defaults for new Study baselines so authors don't repeat composite + params + run-knobs per Study. v2ecoli friction #18 (2026-05-19): adding this block required bumping schema_version to 3, which the schema did not yet accept.",
+      "additionalProperties": false,
+      "properties": {
+        "composite":      {"type": "string", "description": "Spec id (e.g. pbg_<slug>.composites.<name>) used as the default baseline composite."},
+        "params":         {"type": "object", "description": "Default params dict for the composite (free-form; matches the composite's parameter schema)."},
+        "duration_s":     {"type": "number", "exclusiveMinimum": 0},
+        "max_duration_s": {"type": "number", "exclusiveMinimum": 0},
+        "interval_s":     {"type": "number", "exclusiveMinimum": 0},
+        "stop_on":        {"type": "string", "description": "Termination signal name (e.g. 'division', 'global_time>=N'). Composite-defined."},
+        "description":    {"type": "string"}
+      }
+    },
     "stageStatus": {
       "type": "object",
       "required": ["status"],
@@ -140,7 +175,7 @@
         "description": {"type": "string"},
         "class": {
           "type": "string",
-          "description": "Registered Visualization class name (e.g. 'TimeSeriesPlot'). When set, the entry is a configured instance of that class and is renderable immediately without /pbg-viz code generation."
+          "description": "Registered Visualization class name (e.g. 'TimeSeriesPlot'). When set, the entry is a configured instance of that class and is renderable immediately without /viva-viz code generation."
         },
         "type": {"enum": ["time-series", "phase-space", "heatmap", "histogram"]},
         "observables": {"type": "array", "items": {"type": "string"}},

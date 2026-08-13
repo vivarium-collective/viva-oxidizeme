@@ -19,6 +19,9 @@ output/
 .pbg/*
 !.pbg/schemas/
 !.pbg/schemas/**
+# hpc.env.example is a committed template; hpc.env / hpc_known_hosts stay
+# ignored by .pbg/* above (they hold real credentials/key paths).
+!.pbg/hpc.env.example
 investigations/*/runs.db
 investigations/*/viz/
 investigations/*/.run.lock
