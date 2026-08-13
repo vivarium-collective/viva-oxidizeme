@@ -31,16 +31,7 @@ RUN mkdir -p /app/.results_cache
 # paths inside the workspace (a vendored sibling, a local sub-checkout)
 # resolve. Loses some layer cache on source-only edits — acceptable
 # trade-off for robustness across source types.
-# VIVARIUM_WORKBENCH_SKIP_LOOM_BUILD=1: the vivarium-workbench build backend
-# otherwise tries to build its optional bigraph-loom Composite Explorer bundle
-# with npm, which this image has no Node toolchain for. The bundle is an
-# OPTIONAL runtime asset — the server degrades to "Explorer unavailable", the
-# rest works normally — so skip it explicitly. Current workbench main already
-# soft-warns on a missing bundle, but this build resolves an older pinned commit
-# that still hard-fails with "npm not found on PATH"; the skip makes the build
-# robust across whichever commit `branch = "main"` resolves to.
-RUN VIVARIUM_WORKBENCH_SKIP_LOOM_BUILD=1 uv sync --no-install-project \
-    || VIVARIUM_WORKBENCH_SKIP_LOOM_BUILD=1 uv sync
+RUN uv sync --no-install-project || uv sync
 
 EXPOSE 9863
 
