@@ -3,7 +3,7 @@ requires = ["hatchling>=1.18"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pbg-oxidizeme"
+name = "viva-oxidizeme"
 version = "0.1.0"
 description = "Process-bigraph wrapper for OxidizeME — a genome-scale ME-model of E. coli with ROS damage/repair (Yang et al. 2019 PNAS / Palsson lab)"
 readme = "README.md"
@@ -44,8 +44,8 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/vivarium-collective/pbg-oxidizeme"
-Issues = "https://github.com/vivarium-collective/pbg-oxidizeme/issues"
+Homepage = "https://github.com/vivarium-collective/viva-oxidizeme"
+Issues = "https://github.com/vivarium-collective/viva-oxidizeme/issues"
 Upstream-OxidizeME = "https://github.com/SBRG/oxidizeme"
 Upstream-COBRAme = "https://github.com/SBRG/cobrame"
 
